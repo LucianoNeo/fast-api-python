@@ -16,18 +16,42 @@ class SaleModel(BaseModel):
 app = FastAPI()
 
 sales = [
-    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2e",
-        "name": "notebook", "price": 500, "quantity": 3},
-    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2f",
-        "name": "iphone", "price": 700, "quantity": 1},
-    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2g",
-        "name": "monitor", "price": 200, "quantity": 3},
-    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2h",
-        "name": "keyboard", "price": 10, "quantity": 6},
-    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2i",
-        "name": "mouse", "price": 10, "quantity": 5},
-    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2j",
-        "name": "webcam", "price": 20, "quantity": 2}
+    {
+        "id": "1bd48a77-9653-435c-ac73-af67bd4acb2e",
+        "name": "notebook",
+        "price": 500,
+        "quantity": 3
+    },
+    {
+        "id": "1bd48a77-9653-435c-ac73-af67bd4acb2f",
+        "name": "iphone",
+        "price": 700,
+        "quantity": 1
+    },
+    {
+        "id": "1bd48a77-9653-435c-ac73-af67bd4acb2g",
+        "name": "monitor",
+        "price": 200,
+        "quantity": 3
+    },
+    {
+        "id": "1bd48a77-9653-435c-ac73-af67bd4acb2h",
+        "name": "keyboard",
+        "price": 10,
+        "quantity": 6
+    },
+    {
+        "id": "1bd48a77-9653-435c-ac73-af67bd4acb2i",
+        "name": "mouse",
+        "price": 10,
+        "quantity": 5
+    },
+    {
+        "id": "1bd48a77-9653-435c-ac73-af67bd4acb2j",
+        "name": "webcam",
+        "price": 20,
+        "quantity": 2
+    }
 ]
 
 
@@ -44,10 +68,9 @@ def all_sales():
 @app.get('/sales/{id}')
 def sale_by_id(id: str):
     for sale in sales:
-        if sale.get('id') == id:
+        if sale["id"] == id:
             return sale
-    else:
-        raise HTTPException(status_code=404, detail='Sale not found')
+    raise HTTPException(status_code=404, detail='Sale not found')
 
 
 @app.get('/sales_qty')
@@ -63,10 +86,20 @@ async def create_sale(item: SaleModel):
 
 
 @app.put("/sales/{id}")
-def update_sale(id: str, item: SaleModel):
+def update_sale(id: str, updatedSale: SaleModel):
     for index, sale in enumerate(sales):
-        if sale.get('id') == id:
-            sales[index].update(item)
-        return (sales[index])
-    else:
-        raise HTTPException(status_code=404, detail='Sale not found')
+        if sale['id'] == id:
+            sales[index]["name"] = updatedSale.name
+            sales[index]["price"] = updatedSale.price
+            sales[index]["quantity"] = updatedSale.quantity
+            return (sales[index])
+    raise HTTPException(status_code=404, detail='Sale ID not found')
+
+
+@app.delete("/sales/{id}")
+def delete_sale(id: str):
+    for index, sale in enumerate(sales):
+        if sale['id'] == id:
+            sales.pop(index)
+            return {"message": "Sale deleted successfully"}
+    raise HTTPException(status_code=404, detail='Sale ID not found')
