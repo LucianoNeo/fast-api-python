@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from typing import Optional
 from uuid import uuid4 as uuid
@@ -47,7 +47,7 @@ def sale_by_id(id: str):
         if sale.get('id') == id:
             return sale
     else:
-        return {"Error": "ID not found"}
+        raise HTTPException(status_code=404, detail='Sale not found')
 
 
 @app.get('/sales_qty')
@@ -69,4 +69,4 @@ def update_sale(id: str, item: SaleModel):
             sales[index].update(item)
         return (sales[index])
     else:
-        return {"Error": "ID not found"}
+        raise HTTPException(status_code=404, detail='Sale not found')
