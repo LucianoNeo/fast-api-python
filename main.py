@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from typing import Optional
+from uuid import uuid4 as uuid
 
 
 class SaleModel(BaseModel):
-    id: Optional[int]
+    id: Optional[str]
     name: str
     price: float = Field(
         gt=0, description="The price must be greater than zero")
@@ -15,12 +16,18 @@ class SaleModel(BaseModel):
 app = FastAPI()
 
 sales = [
-    {"id": 1, "name": "notebook", "price": 500, "quantity": 3},
-    {"id": 2, "name": "iphone", "price": 700, "quantity": 1},
-    {"id": 3, "name": "monitor", "price": 200, "quantity": 3},
-    {"id": 4, "name": "keyboard", "price": 10, "quantity": 6},
-    {"id": 5, "name": "mouse", "price": 10, "quantity": 5},
-    {"id": 6, "name": "webcam", "price": 20, "quantity": 2}
+    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2e",
+        "name": "notebook", "price": 500, "quantity": 3},
+    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2f",
+        "name": "iphone", "price": 700, "quantity": 1},
+    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2g",
+        "name": "monitor", "price": 200, "quantity": 3},
+    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2h",
+        "name": "keyboard", "price": 10, "quantity": 6},
+    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2i",
+        "name": "mouse", "price": 10, "quantity": 5},
+    {"id": "1bd48a77-9653-435c-ac73-af67bd4acb2j",
+        "name": "webcam", "price": 20, "quantity": 2}
 ]
 
 
@@ -35,7 +42,7 @@ def all_sales():
 
 
 @app.get('/sales/{id}')
-def sale_by_id(id: int):
+def sale_by_id(id: str):
     for sale in sales:
         if sale.get('id') == id:
             return sale
@@ -50,9 +57,16 @@ def sales_qty():
 
 @app.post('/sales')
 async def create_sale(item: SaleModel):
-    for sale in sales:
-        if sale.get('id') == item.id:
-            return {"error": "Id Already Exists"}
+    item.id = str(uuid())
+    sales.append(item)
+    return sales
+
+
+@app.put("/sales/{id}")
+def update_sale(id: str, item: SaleModel):
+    for index, sale in enumerate(sales):
+        if sale.get('id') == id:
+            sales[index].update(item)
+        return (sales[index])
     else:
-        sales.append(item)
-        return sales
+        return {"Error": "ID not found"}
