@@ -61,12 +61,12 @@ def home():
 
 
 @app.get('/sales')
-def all_sales():
+def get_all_sales():
     return sales
 
 
 @app.get('/sales/{id}')
-def sale_by_id(id: str):
+def get_sale_by_id(id: str):
     for sale in sales:
         if sale["id"] == id:
             return sale
@@ -74,7 +74,7 @@ def sale_by_id(id: str):
 
 
 @app.get('/sales_qty')
-def sales_qty():
+def get_sales_qty():
     return {"Sales Quantity": len(sales)}
 
 
