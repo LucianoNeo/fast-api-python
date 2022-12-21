@@ -58,32 +58,7 @@ sales = [
 
 @app.get('/')
 def home():
-    return {"message": "Welcome to Neo's Python FASTAPI!"}
-
-
-@app.get('/sales')
-def get_all_sales():
-    return sales
-
-
-@app.get('/sales/{id}')
-def get_sale_by_id(id: str):
-    for sale in sales:
-        if sale["id"] == id:
-            return sale
-    raise HTTPException(status_code=404, detail='Sale not found')
-
-
-@app.get('/sales_qty')
-def get_sales_qty():
-    return {"Sales Quantity": len(sales)}
-
-
-@app.post('/sales')
-async def create_sale(item: SaleModel):
-    item.id = str(uuid())
-    sales.append(item)
-    return sales
+    return {"message": "Welcome to Neo's audio transcription's API!"}
 
 @app.post("/uploadaudio/")
 async def create_upload_audio(audio: bytes = File(...)):
@@ -96,22 +71,3 @@ async def create_upload_audio(audio: bytes = File(...)):
                 audioStored = r.record(source)
                 text = r.recognize_google(audioStored, language='pt-BR')
         return text
-
-@app.put("/sales/{id}")
-def update_sale(id: str, updatedSale: SaleModel):
-    for index, sale in enumerate(sales):
-        if sale['id'] == id:
-            sales[index]["name"] = updatedSale.name
-            sales[index]["price"] = updatedSale.price
-            sales[index]["quantity"] = updatedSale.quantity
-            return (sales[index])
-    raise HTTPException(status_code=404, detail='Sale ID not found')
-
-
-@app.delete("/sales/{id}")
-def delete_sale(id: str):
-    for index, sale in enumerate(sales):
-        if sale['id'] == id:
-            sales.pop(index)
-            return {"message": "Sale deleted successfully"}
-    raise HTTPException(status_code=404, detail='Sale ID not found')
