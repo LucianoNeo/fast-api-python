@@ -2,7 +2,8 @@ from fastapi import FastAPI, HTTPException, File, UploadFile, Form
 from pydantic import BaseModel, Field
 from typing import Optional
 from uuid import uuid4 as uuid
-
+import speech_recognition as sr
+from pydub import AudioSegment
 
 class SaleModel(BaseModel):
     id: Optional[str]
@@ -84,11 +85,17 @@ async def create_sale(item: SaleModel):
     sales.append(item)
     return sales
 
-@app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
-    with open(file.filename, "wb") as f:
-        f.write(file.file)
-    return {"file_saved": True}
+@app.post("/uploadaudio/")
+async def create_upload_audio(audio: bytes = File(...)):
+    #extension = audio.filename.split(".")[1]
+    #if extension == 'wav' or extension == 'mp3':
+        with open("audio.wav", "wb") as f:
+            f.write(audio)
+            r = sr.Recognizer()
+            with sr.AudioFile('audio.wav') as source:
+                audioStored = r.record(source)
+                text = r.recognize_google(audioStored, language='pt-BR')
+        return text
 
 @app.put("/sales/{id}")
 def update_sale(id: str, updatedSale: SaleModel):
