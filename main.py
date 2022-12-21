@@ -85,8 +85,10 @@ async def create_sale(item: SaleModel):
     return sales
 
 @app.post("/uploadfile/")
-async def create_upload_file(file: bytes = Form(...)):
-    return {"file_size": len(file)}
+async def create_upload_file(file: UploadFile = File(...)):
+    with open(file.filename, "wb") as f:
+        f.write(file.file)
+    return {"file_saved": True}
 
 @app.put("/sales/{id}")
 def update_sale(id: str, updatedSale: SaleModel):
