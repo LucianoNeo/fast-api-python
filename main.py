@@ -19,8 +19,8 @@ async def create_upload_audio(file: UploadFile):
             f.write(contents)
             r = sr.Recognizer()
             audio = AudioSegment.from_file(filename, format="mp3")
-            audio.export("convertido/output.wav", format="wav")
-            with sr.AudioFile("convertido/output.wav") as source:
+            audio.export("output.wav", format="wav")
+            with sr.AudioFile("output.wav") as source:
                 audioStored = r.record(source)
                 
                 text = r.recognize_google(audioStored, language='pt-BR')
