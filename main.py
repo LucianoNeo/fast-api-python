@@ -20,7 +20,9 @@ async def create_upload_audio(file: UploadFile):
             r = sr.Recognizer()
             with sr.AudioFile(filename) as source:
                 audioStored = r.record(source)
-                text = r.recognize_google(audioStored, language='pt-BR')
+                audio = AudioSegment.from_file(audioStored, format="mp3")
+                audio.export("convertido/output.wav", format="wav")
+                text = r.recognize_google("convertido/output.wav", language='pt-BR')
                 return text
     else:
         raise HTTPException(status_code=500, detail='Formato não aceito no momento, tente com .wav ou .mp3')
