@@ -3,11 +3,7 @@ import time
 import azure.cognitiveservices.speech as speechsdk
 import sys
 
-subscription_key = "9f7044bebff743158199f2ac4d5668c1"
 service_region = "eastus"
-
-
-
 
 speech_config = speechsdk.SpeechConfig(subscription=subscription_key, region=service_region)
 speech_config.speech_recognition_language="pt-BR"
@@ -15,7 +11,6 @@ speech_config.speech_recognition_language="pt-BR"
 audio_config = speechsdk.audio.AudioConfig(filename="audio2.wav")
 
 speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config, audio_config=audio_config)
-
 
 done = False
 
