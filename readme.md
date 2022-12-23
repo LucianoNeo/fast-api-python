@@ -19,7 +19,7 @@ pip3 install uvicorn
 ## Comando para rodar o webserver
 
 ```
-uvicorn main:app --reload
+uvicorn main:app --reload --host 0.0.0.0
 ```
 
 Deploy: <br>
