@@ -20,7 +20,6 @@ Jinja2==3.1.2
 MarkupSafe==2.1.1
 monotonic==1.6
 numpy==1.21.6
-pocketsphinx==5.0.0
 pycodestyle==2.9.1
 pycparser==2.21
 pydantic==1.10.2
